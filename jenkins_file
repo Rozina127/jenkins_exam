@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Rozina127/jenkins_exam.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'  // ya 'pip install -r requirements.txt' ya 'mvn dependency:resolve'
+            }
+        }
+        stage('Build Application') {
+            steps {
+                sh 'npm run build'  // ya 'mvn package' ya 'dotnet build'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'  // ya 'mvn test' ya 'pytest'
+            }
+        }
+        stage('Deploy Application') {
+            steps {
+                sh 'echo "Deploying to server..."'
+                // Yahan apna deploy command likho, jaise:
+                // scp -r dist/* user@server:/var/www/html
+                // ya kubectl apply -f deployment.yaml
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline successful!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
